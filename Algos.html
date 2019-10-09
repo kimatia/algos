@@ -1,0 +1,132 @@
+<script>
+  function generateNumbers(num) {
+    var numberArray = [];
+    // 1. Generate 100 numbers(random)
+    for(var i = 0; i < num; i++){
+      let numbers = Math.floor(Math.random() * 1000)
+      numberArray.push(numbers)
+    }
+    return numberArray;
+  }
+  // 2. Find and display the smallest
+  function findSmallest() {
+    let a = null;
+    let b = null;
+    numberArray.map(number => {
+      if(numberArray.indexOf(number) == 0) {
+        b = number;
+      } else {
+        a = number;
+        if( a < b) {
+          b = a
+        }
+      }
+    })
+    console.log({ 'findSmallest': b})
+    return b;
+  }
+  // 3. Find and display the largest
+  function findLargest() {
+    let a = null;
+    let b = null;
+    numberArray.map(number => {
+      if(numberArray.indexOf(number) == 0) {
+        b = number;
+      } else {
+        a = number;
+        if( a > b) {
+          b = a
+        }
+      }
+    })
+    return console.log({ 'findLargest': b})
+  }
+  // 4. Compute and display the average
+  function findAverage() {
+    let a = null;
+    let b = null;
+    let average = null;
+    numberArray.map(number => {
+      if(numberArray.indexOf(number) == 0) {
+        b = number;
+      } else {
+        a = number;
+        b += a
+      }
+    })
+    average = b / numberArray.length
+    return console.log({ 'findAverage': average})
+  }
+  // 5. Arrange the numbers in  ascending array
+  function sortByOrder(array) {
+    var done = false;
+    while (!done) {
+      done = true;
+      for (var i = 1; i < array.length; i ++) {
+        if (array[i - 1] > array[i]) {
+          done = false;
+          var tmp = array[i - 1];
+          array[i - 1] = array[i];
+          array[i] = tmp;
+        }
+      }
+    }
+
+    return console.log({'sortByOrder': array});
+  }
+
+  function shuffleArray(array) {
+    let arrayLength = array.length;
+    var indexArray = [];
+    newArray.length = arrayLength;
+    for (let i = 0; i < arrayLength; i++) {
+      let index = Math.floor(Math.random() * (arrayLength - 0) + 0)
+      while ( indexArray.includes(index) ){
+        index = Math.floor(Math.random() * (arrayLength - 0) + 0)
+      }
+      indexArray.push(index);
+      newArray[index] = array[i]
+    }
+  }
+
+  function shuffleArrayFix(array) {
+    let arrayLength = array.length;
+    var indexArray = [];
+    newArray.length = arrayLength;
+    for (let i = 0; i < arrayLength; i++) {
+      let index = Math.floor(Math.random() * (arrayLength - 0) + 0)      
+      indexArray.includes(index) ? index = Math.floor(Math.random() * (arrayLength - 0) + 0) : indexArray.push(index)
+      indexArray.push(index);
+      newArray[index] = array[i]
+    }
+    console.log(newArray)
+  }
+
+  function testSpeed(array){
+    for (let index = 0; index < array.length; index++) {
+      //get each element in an array
+      const element = array[index];
+      // pass the element as array length to generateNumbers
+      var genArray = generateNumbers(element)
+      // get startTime
+      var startTime = new Date().getTime();
+      // shuffle this new array
+      shuffleArray(genArray)
+      // get endTime      
+      var endTime = new Date().getTime()
+      // compare time
+      var duration = endTime - startTime
+      //console.log
+      console.log(`Speed for ${element} items is ${duration} ms` )
+    }
+  }
+
+
+    generateNumbers(10)
+    findSmallest()
+    findLargest()
+    findAverage()
+    sortByOrder(numberArray)
+    generateRandomNumbers()
+    shuffleArray()
+</script>
