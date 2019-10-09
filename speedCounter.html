@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ARRAY SPEED TEST</title>
+</head>
+<body>
+  <style>
+    .main_body {
+      position: relative;
+    }
+
+    .table_container {
+      width: 600px;
+      height: auto;
+      margin: 200px auto;
+    }
+
+    table {
+      width: 500px;
+      border-collapse: collapse;
+      border: 1px solid #000;
+    }
+
+    th {
+      border: 1px solid #111;
+      height: 40px;
+    }
+
+    td {
+      border-collapse: collapse;
+      height: 50px;
+      border: 1px solid #000;
+    }
+
+    input[type='number'] {
+      height: 30px;
+      width: 40px;
+      display: block;
+      margin: auto;
+      padding-left: 10px;
+      border-radius: 4px;
+      border: 1px solid #eee;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    .table_button {
+      width: 100px;
+      height: 30px;
+      display: block;
+      margin: auto;
+    }
+
+    #generatedArray {
+      word-wrap: break-word;
+    }
+
+    .popup_container {
+      display: none;
+      position: fixed;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      transform: translateY(-100%);
+      transition: transform 1s ease-in-out;
+      height: 100vh;
+      overflow-y: scroll;
+      background-color: rgba(0, 0, 0, .56);
+      top: 0;
+    }
+
+    .show_popup {
+      display: flex;
+      transform: translateY(0);
+    }
+
+    .popup {
+      width: 400px;
+      overflow-y: scroll;
+      height: auto;
+      padding: 10px;
+      min-height: 200px;
+      margin: auto;
+      background-color: #fff;
+      color: #000;
+      border-radius: 8px;
+    }
+
+    .close_button {
+      display: block;
+      margin: auto;
+    }
+
+  </style>
+  <script>
+    var newArray = [];
+    function generateNumbers(num) {
+      var numberArray = [];
+      // 1. Generate x numbers(random)
+      for(var i = 0; i < num; i++){
+        let numbers = Math.floor(Math.random() * 1000)
+        numberArray.push(numbers)
+      }
+      return numberArray;
+    }
+    // 2. Find and display the smallest
+    function findSmallest() {
+      let a = null;
+      let b = null;
+      numberArray.map(number => {
+        if(numberArray.indexOf(number) == 0) {
+          b = number;
+        } else {
+          a = number;
+          if( a < b) {
+            b = a
+          }
+        }
+      })
+      console.log({ 'findSmallest': b})
+      return b;
+    }
+    // 3. Find and display the largest
+    function findLargest() {
+      let a = null;
+      let b = null;
+      numberArray.map(number => {
+        if(numberArray.indexOf(number) == 0) {
+          b = number;
+        } else {
+          a = number;
+          if( a > b) {
+            b = a
+          }
+        }
+      })
+      return console.log({ 'findLargest': b})
+    }
+    // 4. Compute and display the average
+    function findAverage() {
+      let a = null;
+      let b = null;
+      let average = null;
+      numberArray.map(number => {
+        if(numberArray.indexOf(number) == 0) {
+          b = number;
+        } else {
+          a = number;
+          b += a
+        }
+      })
+      average = b / numberArray.length
+      return console.log({ 'findAverage': average})
+    }
+    // 5. Arrange the numbers in  ascending array
+    function sortByOrder(array) {
+      var done = false;
+      while (!done) {
+        done = true;
+        for (var i = 1; i < array.length; i ++) {
+          if (array[i - 1] > array[i]) {
+            done = false;
+            var tmp = array[i - 1];
+            array[i - 1] = array[i];
+            array[i] = tmp;
+          }
+        }
+      }
+      return console.log({'sortByOrder': array});
+    }
+
+    function shuffleArray(array) {
+      let arrayLength = array.length;
+      var indexArray = [];
+      newArray.length = arrayLength;
+      for (let i = 0; i < arrayLength; i++) {
+        let index = Math.floor(Math.random() * (arrayLength - 0) + 0)
+        while ( indexArray.includes(index) ){
+          index = Math.floor(Math.random() * (arrayLength - 0) + 0)
+        }
+        indexArray.push(index);
+        newArray[index] = array[i]
+      }
+    }
+
+    function testSpeed(){
+      // declare variables
+      let table = document.getElementById('table').children[0]
+      // convert nodeList to proper array using spread operator
+      let tableRows = [...table.getElementsByClassName('array-row')]
+      // create an array to store size from table
+      let array = []
+      // get list of all buttons on the table and convert to array
+      let tableButtons = [...document.getElementsByClassName('table_button')]
+      // loop through the table to find arraySizes
+      tableRows.forEach(child => {
+        let arraySize = document.getElementById(`${tableRows.indexOf(child) + 1 + 'Array'}`) != null ? Number(document.getElementById(`${tableRows.indexOf(child) + 1 + 'Array'}`).value) : ''
+        array.push(arraySize)
+      });
+      let GeneratedArray = []
+      //loop over array of sizes from table
+      for (let index = 0; index < array.length; index++) {
+        //get each element in an array
+        const element = array[index];
+        // pass the element as array length to generateNumbers
+        var genArray = generateNumbers(element)
+        // store new array
+        GeneratedArray.push(genArray)
+        // add each array to button data attribute
+        tableButtons[index].addEventListener('click', showGeneratedArray)
+        tableButtons[index].setAttribute('id', `[${genArray}]`)
+        // get startTime
+        var startTime = new Date().getTime();
+        // shuffle this new array
+        shuffleArray(genArray)
+        // get endTime
+        var endTime = new Date().getTime()
+        // compare time
+        var duration = endTime - startTime
+        //append speed to table row
+        let arrayIndex = GeneratedArray.indexOf(genArray) + 1
+        let idName = arrayIndex + 'Speed'
+        document.getElementById(idName).innerHTML = duration + 'ms'
+      }
+    }
+    
+    function showGeneratedArray() {
+      let popUpContainer = document.getElementsByClassName('popup_container')[0]
+      popUpContainer.classList.add('show_popup')
+      let generatedArray = document.getElementById('generatedArray')
+      generatedArray.innerHTML =  `Your generated Array is ${this.id}`
+    }
+    function addNewRow() {
+      let table = document.getElementById('table').children[0]
+      let row = document.createElement('tr')
+      row.classList.add('array-row')
+      for (let i = 0; i < 3; i++) {
+        let tableDescription = document.createElement('td')
+        let tableDescriptionLength = table.children.length
+        if(i == 0) {
+          let inputField = document.createElement('input')
+          inputField.setAttribute('type', 'number')
+          let ArrayIdName = tableDescriptionLength + 'Array'
+          inputField.setAttribute('id', ArrayIdName)
+          tableDescription.appendChild(inputField)
+        } else if( i == 1) {
+          let arraySpeedParagraph = document.createElement('p')
+          let idName = tableDescriptionLength + 'Speed'
+          arraySpeedParagraph.setAttribute('id', idName)
+          tableDescription.appendChild(arraySpeedParagraph)
+        } else {
+          let button = document.createElement('button');
+          button.classList.add('table_button')
+          button.addEventListener('click', showGeneratedArray)
+          button.innerHTML = 'View Array'
+          tableDescription.appendChild(button)
+        }
+        row.appendChild(tableDescription)
+      }
+      table.appendChild(row)
+    }
+    function closePopUp() {
+      let popUpContainer = document.getElementsByClassName('popup_container')[0]
+      popUpContainer.classList.remove('show_popup')
+    }
+    // recursion
+    // recursion to find factorial
+    // for loop to find factorial
+    // use stirlings theorem to calculate factorial
+  </script>
+  <section class="main_body">
+    <!-- <div>
+      <label for="array Size">Array Size</label>
+      <input type="number" name="arraySize" id="arraySize" placeholder='Enter the array Size'>
+      <button onclick="generateNumbers()">Generate Array</button>
+      <h3>Your Generated Array is:</h3>
+      <p id="arrayElement"></p>
+    </div> -->
+    <div class="table_container">
+      <table id="table">
+        <tr>
+          <th>Array Size</th>
+          <th>Shuffle Speed</th>
+          <th>Action</th>
+        </tr>
+        <tr class="array-row">
+          <td>
+            <input type="number" name="arrayLength" id="1Array" placeholder="">
+          </td>
+          <td>
+            <p id="1Speed"></p>
+          </td>
+          <td>
+            <button class="table_button" >View Array</button>
+          </td>
+        </tr>
+        <tr class="array-row">
+          <td>
+            <input type="number" name="arrayLength" id="2Array" placeholder="">
+          </td>
+          <td>
+            <p id="2Speed"></p>
+          </td>
+          <td>
+            <button class="table_button" >View Array</button>
+          </td>
+        </tr>
+        <tr class="array-row">
+          <td>
+            <input type="number" name="arrayLength" id="3Array" placeholder="">
+          </td>
+          <td>
+            <p id="3Speed"></p>
+          </td>
+          <td>
+            <button class="table_button" >View Array</button>
+          </td>
+        </tr>
+        <tr class="array-row">
+          <td>
+            <input type="number" name="arrayLength" id="4Array" placeholder="">
+          </td>
+          <td>
+            <p id="4Speed"></p>
+          </td>
+          <td>
+            <button class="table_button" >View Array</button>
+          </td>
+        </tr>
+        <tr class="array-row">
+          <td>
+            <input type="number" name="arrayLength" id="5Array" placeholder="">
+          </td>
+          <td>
+            <p id="5Speed"></p>
+          </td>
+          <td>
+            <button class="table_button">View Array</button>
+          </td>
+        </tr>
+      </table>
+      <div class="popup_container">
+        <div class="popup">
+          <p id="generatedArray"></p>
+          <button onclick="closePopUp()" class="close_button">close</button>
+        </div>
+      </div>
+      <button onclick="addNewRow()">Add row</button>
+      <button onclick="testSpeed()">Run</button>
+    </div>
+  </section>
+</body>
+</html>
