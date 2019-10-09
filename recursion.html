@@ -1,0 +1,31 @@
+<script>
+  //finding factorial of a number
+  // using native loop
+  function FactorialUsingLoop(num) {
+    let answer = 1;
+    for (let i = num; i > 0; i--) {
+      answer *= i
+    }
+    return answer
+  }
+  // using recursion
+  function FactorialUsingRecursion(num){
+    if(num === 0) {
+      return 1;
+    } else {
+      return num * FactorialUsingRecursion(num - 1)
+    }
+  }
+  // using stirlings theorem to calculate factorial
+  function FactorialUsingStirlings(num) {
+    if(num === 1) {
+      return 1;
+    } else {
+      // natural number
+      let e = 2.71;
+      // stirling's approximation
+      let z = Math.floor(Math.sqrt(2 * 3.14159 * num) * Math.pow((num / e), num) );
+      return z
+    }
+  }
+</script>
